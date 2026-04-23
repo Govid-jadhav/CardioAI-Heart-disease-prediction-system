@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | CardioAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-container { margin-top: 2rem; }
+        .hero-section { text-align: center; margin-bottom: 3rem; }
+        .hero-section h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .hero-section h1 span { color: var(--primary-color); }
+        .vision-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .vision-card { text-align: center; padding: 2rem; background: rgba(15, 23, 42, 0.4); border-radius: 16px; border: 1px solid var(--border-color); }
+        .vision-card i { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+        <nav class="navbar">
+        <a href="/" class="nav-logo" style="text-decoration:none;">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>CardioAI</span>
+        </a>
+        <div class="nav-menu" id="navMenu">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/features">Features</a></li>
+                <li><a href="/gallery">Gallery</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/help">Help</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+                                    <div class="nav-auth">
+                {% if session.get('user_id') %}
+                    <a href="/profile" style="color: var(--primary-color); font-weight: 500; text-decoration: none; transition: color 0.3s; display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fa-solid fa-user-circle" style="font-size: 1.2rem;"></i> Hi, {{ session.get('user_name').split()[0][:15] }}!
+                    </a>
+
+                {% else %}
+                    <a href="/login" class="btn-login">Login</a>
+                    <a href="/signup" class="btn-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+        <button class="menu-toggle" id="menuToggle" onclick="document.getElementById('navMenu').classList.toggle('active')">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Dynamic Background Shapes -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="container page-container">
+        <main class="glass-panel" style="padding: 3rem;">
+            <div class="hero-section" style="margin-bottom: 3rem;">
+                <h1>Platform <span>Gallery</span></h1>
+                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Visualizing the future of machine learning in cardiovascular diagnostics.</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; align-items: start;">
+                <!-- Gallery Item 1 -->
+                <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.4s ease; background: rgba(15, 23, 42, 0.4);" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(255, 42, 95, 0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.4)';">
+                    <img src="{{ url_for('static', filename='images/cardio_ai_dashboard.png') }}" alt="CardioAI Dashboard UI" style="width: 100%; height: 200px; display: block; object-fit: cover; border-bottom: 1px solid var(--border-color);">
+                    <div style="padding: 1.5rem;">
+                        <h3 style="color: var(--text-main); margin-bottom: 0.5rem; font-size: 1.2rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-display" style="color:var(--primary-color);"></i> Dashboard Concept</h3>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;">Clinical interface view for active patient heart tracking and diagnosis.</p>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 2 -->
+                <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.4s ease; background: rgba(15, 23, 42, 0.4);" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(255, 42, 95, 0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.4)';">
+                    <img src="{{ url_for('static', filename='images/cardio_mobile_concept.png') }}" alt="CardioAI Mobile App" style="width: 100%; height: 200px; display: block; object-fit: cover; border-bottom: 1px solid var(--border-color);">
+                    <div style="padding: 1.5rem;">
+                        <h3 style="color: var(--text-main); margin-bottom: 0.5rem; font-size: 1.2rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-mobile-screen" style="color:var(--primary-color);"></i> Mobile App</h3>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;">Portable dark-mode assessments giving immediate risk readouts on the go.</p>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 3 -->
+                <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: transform 0.4s ease; background: rgba(15, 23, 42, 0.4);" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(255, 42, 95, 0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.4)';">
+                    <img src="{{ url_for('static', filename='images/cardio_neural_network.png') }}" alt="CardioAI Neural Network" style="width: 100%; height: 200px; display: block; object-fit: cover; border-bottom: 1px solid var(--border-color);">
+                    <div style="padding: 1.5rem;">
+                        <h3 style="color: var(--text-main); margin-bottom: 0.5rem; font-size: 1.2rem; display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-network-wired" style="color:var(--primary-color);"></i> Neural Diagnostics</h3>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;">Visualization of CardioAI's algorithm mapping millions of risk connections.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        {% include 'footer.html' %}
+    </div>
+    <!-- tsParticles JS Framework for Live Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+        tsParticles.load("particles-js", {
+            background: { color: { value: "transparent" } },
+            fpsLimit: 60,
+            interactivity: {
+                events: { onClick: { enable: true, mode: "push" }, onHover: { enable: true, mode: "grab" }, resize: true },
+                modes: { push: { quantity: 3 }, grab: { distance: 180, links: { opacity: 0.8 } } }
+            },
+            particles: {
+                color: { value: "#ff2a5f" },
+                links: { color: "#ff2a5f", distance: 150, enable: true, opacity: 0.3, width: 1.5 },
+                move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: false, speed: 1.2, straight: false },
+                number: { density: { enable: true, area: 800 }, value: 70 },
+                opacity: { value: 0.5 },
+                shape: { type: "circle" },
+                size: { value: { min: 1, max: 3 } }
+            },
+            detectRetina: true
+        });
+    </script>
+</body>
+</html>

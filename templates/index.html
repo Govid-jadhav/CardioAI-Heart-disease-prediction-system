@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardioAI | Heart Disease Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+        <nav class="navbar">
+        <a href="/" class="nav-logo" style="text-decoration:none;">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>CardioAI</span>
+        </a>
+        <div class="nav-menu" id="navMenu">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/features">Features</a></li>
+                <li><a href="/gallery">Gallery</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/help">Help</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+                                    <div class="nav-auth">
+                {% if session.get('user_id') %}
+                    <a href="/profile" style="color: var(--primary-color); font-weight: 500; text-decoration: none; transition: color 0.3s; display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fa-solid fa-user-circle" style="font-size: 1.2rem;"></i> Hi, {{ session.get('user_name').split()[0][:15] }}!
+                    </a>
+
+                {% else %}
+                    <a href="/login" class="btn-login">Login</a>
+                    <a href="/signup" class="btn-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+        <button class="menu-toggle" id="menuToggle" onclick="document.getElementById('navMenu').classList.toggle('active')">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Dynamic Background Elements (tsParticles Framework) -->
+    <div id="particles-js" style="position: fixed; z-index: -2; left: 0; top: 0; width: 100%; height: 100vh;"></div>
+
+    <div class="container">
+
+        <!-- Interactive Landing Hero Component -->
+        <section class="hero-section" id="heroSection" {% if prediction %}style="display: none;"{% endif %}>
+            <div class="hero-title-wrapper">
+                <div class="hero-badge">
+                    <i class="fa-solid fa-bolt"></i> AI-Powered Diagnostics
+                </div>
+                <h1 class="hero-title">Protect Your Heart with <span>Intelligent Insights</span></h1>
+                <p class="hero-desc">CardioAI analyzes your vital clinical parameters to detect early signs of cardiovascular disease with machine-learning precision. Fast, private, and highly accurate.</p>
+                
+                <div class="hero-metrics">
+                    <div class="metric">
+                        <i class="fa-solid fa-bullseye"></i>
+                        <span class="metric-val">98%</span>
+                        <span class="metric-label">Precision</span>
+                    </div>
+                    <div class="metric">
+                        <i class="fa-solid fa-lock"></i>
+                        <span class="metric-val">100%</span>
+                        <span class="metric-label">Private</span>
+                    </div>
+                    <div class="metric">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                        <span class="metric-val">Instant</span>
+                        <span class="metric-label">Results</span>
+                    </div>
+                </div>
+
+                <div class="hero-actions">
+                    {% if session.get('user_id') %}
+                    <button class="btn-start" type="button" onclick="document.getElementById('heroSection').style.display='none'; document.getElementById('assessmentSection').style.display='block'; window.scrollTo(0, 0);">
+                        Start Heart Assessment <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    {% else %}
+                    <button class="btn-start" type="button" onclick="window.location.href='/login';" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: none;">
+                        <i class="fa-solid fa-lock"></i> Login to Start Assessment
+                    </button>
+                    <p style="color: var(--text-muted); margin-top: 1rem; font-size: 0.95rem;">Please secure your privacy by <a href="/login" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Logging in</a> or <a href="/signup" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Signing up</a> first.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <div id="assessmentSection" {% if not prediction %}style="display: none;"{% endif %}>
+            <header class="header">
+                <div class="logo">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                    <h1>Cardio<span>AI</span></h1>
+                </div>
+                <p>Advanced Machine Learning for Early Heart Disease Detection</p>
+                <div style="margin-top: 1rem;">
+                    <a href="/help" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.6rem 1.2rem; border-radius:30px; background:rgba(255,255,255,0.05); color:var(--text-muted); text-decoration:none; border:1px solid var(--border-color); font-size:0.95rem; font-weight: 500; transition:all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" onmouseover="this.style.background='rgba(255,42,95,0.1)'; this.style.color='var(--primary-color)'; this.style.borderColor='rgba(255,42,95,0.3)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.color='var(--text-muted)'; this.style.borderColor='var(--border-color)'; this.style.transform='translateY(0)'">
+                        <i class="fa-solid fa-circle-question" style="font-size: 1.1rem;"></i> Unsure about these terms? Visit our Help Guide
+                    </a>
+                </div>
+            </header>
+
+        {% if prediction %}
+        <!-- AI processing overlay -->
+        <div id="aiLoader" style="position:fixed; top:0; left:0; width:100%; height:100vh; background:rgba(7,7,11,0.9); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
+            <i class="fa-solid fa-microchip fa-bounce" style="font-size:5rem; color:var(--primary-color); margin-bottom:1.5rem;"></i>
+            <h2 style="color:var(--text-main); font-family:'Outfit', sans-serif;">Processing Diagnostics...</h2>
+            <p style="color:var(--text-muted); margin-top:10px;">Running ML algorithms against global cardiovascular models</p>
+        </div>
+
+        <div id="resultModal" style="position:fixed; top:0; left:0; width:100%; height:100vh; background:rgba(0,0,0,0.85); z-index:9998; display:none; justify-content:center; align-items:center; backdrop-filter:blur(8px);">
+            <div class="glass-panel" style="max-width: 650px; width: 90%; background: var(--bg-surface); border: 1px solid var(--border-color); text-align: center; padding: 3rem; border-radius: 24px; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);">
+                
+                <div id="pdfContentModal" style="padding: 1.5rem; background: var(--bg-surface); border-radius: 12px;">
+                    <div class="result-icon" style="margin-bottom: 1.5rem;">
+                        {% if 'No' in prediction %}
+                        <i class="fa-solid fa-shield-heart" style="color: #10b981; font-size:4.5rem; filter: drop-shadow(0 0 20px rgba(16,185,129,0.4));"></i>
+                        {% else %}
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444; font-size:4.5rem; filter: drop-shadow(0 0 20px rgba(239,68,68,0.4));"></i>
+                        {% endif %}
+                    </div>
+                    <h2 style="margin: 0.5rem 0; color: var(--text-main); font-size: 1.8rem;">CardioAI Analysis Complete</h2>
+                    <p style="font-size:2rem; font-weight:700; color:{% if 'No' in prediction %}#10b981{% else %}#ef4444{% endif %}; margin-bottom: 2rem;">{{ prediction }}</p>
+                    
+                    <div style="text-align: left; background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.05);">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary-color); font-size: 1.1rem; border-bottom: 1px solid rgba(255,42,95,0.2); padding-bottom: 0.5rem;"><i class="fa-solid fa-clipboard-user"></i> Patient Clinical Details</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; font-size: 0.95rem; color: var(--text-muted);">
+                            {% for key, value in input_data.items() %}
+                            <div style="display: flex; justify-content: space-between; padding-right: 1rem;">
+                                <strong style="color:var(--text-main);">{{ key }}:</strong> 
+                                <span>{{ value }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button onclick="downloadPDF('pdfContentModal', 'Assessment_Report')" style="width:100%; background: transparent; color:var(--primary-color); border:1px solid var(--primary-color); padding:1.2rem; border-radius:12px; font-weight:600; cursor:pointer; font-size: 1.1rem; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,42,95,0.1)'" onmouseout="this.style.background='transparent'">
+                        <i class="fa-solid fa-file-pdf"></i> Download PDF
+                    </button>
+                    <button onclick="window.location.href='/';" style="width:100%; background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%); color:white; border:none; padding:1.2rem; border-radius:12px; font-weight:600; cursor:pointer; font-size: 1.1rem; box-shadow: 0 10px 20px -10px rgba(239,68,68,0.5); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        Close 
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function downloadPDF(elementId) {
+                var content = document.getElementById(elementId).innerHTML;
+                
+                // Create an isolated printable window natively
+                var printWindow = window.open('', '', 'height=800,width=800');
+                printWindow.document.write('<!DOCTYPE html><html><head><title>CardioAI Assessment Report</title>');
+                printWindow.document.write('<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">');
+                printWindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">');
+                printWindow.document.write('<style>');
+                printWindow.document.write('@page { margin: 0.5in; }');
+                printWindow.document.write('body { font-family: "Outfit", sans-serif; background: #ffffff; color: #1e293b; padding: 20px; line-height: 1.6; text-align: center; }');
+                printWindow.document.write('.container { max-width: 800px; margin: 0 auto; background: #f8fafc; padding: 40px; border-radius: 12px; border: 1px solid #e2e8f0; }');
+                printWindow.document.write('h2 { color: #ff2a5f; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-top: 0; }');
+                printWindow.document.write('strong { color: #475569 !important; }');
+                printWindow.document.write('p { font-size: 1.2rem; }');
+                printWindow.document.write('</style></head><body>');
+                
+                printWindow.document.write('<div class="container">');
+                printWindow.document.write('<h2><i class="fa-solid fa-heart-pulse"></i> CardioAI Official Diagnostics</h2>');
+                
+                // Remove the dark background overrides that were inline and set it to clean black/white
+                content = content.replace(/background:\s*var\(--bg-surface\)/g, '');
+                content = content.replace(/color:\s*white/g, 'color: #0f172a');
+                content = content.replace(/rgba\(0,0,0,0.3\)/g, '#ffffff');
+                content = content.replace(/border:\s*1px\s*solid\s*rgba\(255,255,255,0.05\)/g, 'border: 1px solid #e2e8f0;');
+                content = content.replace(/color:\s*var\(--text-main\)/g, 'color: #000000');
+                content = content.replace(/color:\s*var\(--text-muted\)/g, 'color: #64748b');
+                content = content.replace(/filter:\s*drop-shadow[^;]+;/g, '');
+                
+                printWindow.document.write(content);
+                printWindow.document.write('<div style="margin-top: 50px; border-top: 1px dashed #cbd5e1; padding-top: 20px; text-align: center; font-size: 0.85rem; color: #94a3b8;"><p>Generated by CardioAI Predictive System. This report is for informational purposes only.</p></div>');
+                printWindow.document.write('</div></body></html>');
+                printWindow.document.close();
+                
+                // Allow resources to reliably fetch before snapping the PDF UI
+                setTimeout(function() {
+                    printWindow.focus();
+                    printWindow.print();
+                    printWindow.close();
+                }, 800);
+            }
+
+            // Sequence the loader followed by the immersive popup modal
+            setTimeout(() => {
+                var loader = document.getElementById('aiLoader');
+                var modal = document.getElementById('resultModal');
+                if (loader) loader.style.display = 'none';
+                if (modal) modal.style.display = 'flex';
+            }, 2500); // 2.5 seconds fake processing time for dramatic effect
+        </script>
+        {% endif %}
+
+        <main class="glass-panel form-container">
+            <form action="/predict" method="POST" id="predictForm">
+
+                <div class="form-grid">
+                    <!-- Column 1 -->
+                    <div class="form-group">
+                        <label for="age"><i class="fa-solid fa-user"></i> Age (in years)</label>
+                        <input type="number" id="age" name="age" step="any" placeholder="e.g. 54" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sex"><i class="fa-solid fa-venus-mars"></i> Gender</label>
+                        <div class="select-wrapper">
+                            <select id="sex" name="sex" required>
+                                <option value="" disabled selected>Select gender</option>
+                                <option value="1">Male</option>
+                                <option value="0">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cp" title="Type of chest pain experienced"><i class="fa-solid fa-lungs"></i> Chest Pain Type</label>
+                        <div class="select-wrapper">
+                            <select id="cp" name="cp" required>
+                                <option value="" disabled selected>Select type</option>
+                                <option value="0">Typical Angina (Heart-related pain)</option>
+                                <option value="1">Atypical Angina (Non-heart related)</option>
+                                <option value="2">Non-anginal Pain (Other causes)</option>
+                                <option value="3">Asymptomatic (No chest pain)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bp" title="Resting blood pressure in mm Hg"><i class="fa-solid fa-droplet"></i> Resting Blood Pressure</label>
+                        <input type="number" id="bp" name="bp" step="any" placeholder="e.g. 130" required>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="form-group">
+                        <label for="chol"><i class="fa-solid fa-cubes-stacked"></i> Serum Cholesterol (mg/dl)</label>
+                        <input type="number" id="chol" name="chol" step="any" placeholder="e.g. 250" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fbs" title="Is fasting blood sugar higher than 120 mg/dl?"><i class="fa-solid fa-candy-cane"></i> Fasting Blood Sugar > 120</label>
+                        <div class="select-wrapper">
+                            <select id="fbs" name="fbs" required>
+                                <option value="" disabled selected>Select value</option>
+                                <option value="1">Yes (High Blood Sugar)</option>
+                                <option value="0">No (Normal Blood Sugar)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="restecg" title="Results of resting electrocardiogram"><i class="fa-solid fa-wave-square"></i> Resting ECG Results</label>
+                        <div class="select-wrapper">
+                            <select id="restecg" name="restecg" required>
+                                <option value="" disabled selected>Select result</option>
+                                <option value="0">Normal</option>
+                                <option value="1">ST-T Wave Abnormality</option>
+                                <option value="2">Left Ventricular Hypertrophy (Enlarged)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="thalach" title="Maximum heart rate achieved during exercise"><i
+                                class="fa-solid fa-heart-circle-bolt"></i> Max Heart Rate</label>
+                        <input type="number" id="thalach" name="thalach" step="any" placeholder="e.g. 150" required>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div class="form-group">
+                        <label for="exang" title="Did you experience chest pain while exercising?"><i class="fa-solid fa-person-running"></i> Exercise-Induced Pain</label>
+                        <div class="select-wrapper">
+                            <select id="exang" name="exang" required>
+                                <option value="" disabled selected>Select value</option>
+                                <option value="1">Yes (Pain during exercise)</option>
+                                <option value="0">No (No pain)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="oldpeak" title="ST depression induced by exercise relative to rest"><i
+                                class="fa-solid fa-arrow-trend-down"></i> ECG ST Depression</label>
+                        <input type="number" id="oldpeak" name="oldpeak" step="any" placeholder="e.g. 1.5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="slope" title="Slope of the peak exercise ST segment"><i
+                                class="fa-solid fa-chart-line"></i> Heart Exercise Response</label>
+                        <div class="select-wrapper">
+                            <select id="slope" name="slope" required>
+                                <option value="" disabled selected>Select slope</option>
+                                <option value="0">Upsloping (Healthy response)</option>
+                                <option value="1">Flat (Neutral response)</option>
+                                <option value="2">Downsloping (Unhealthy response)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ca" title="Number of major vessels colored by fluoroscopy"><i
+                                class="fa-solid fa-vial"></i> Blocked Major Vessels</label>
+                        <div class="select-wrapper">
+                            <select id="ca" name="ca" required>
+                                <option value="" disabled selected>Select count</option>
+                                <option value="0">0 (None)</option>
+                                <option value="1">1 Vessel</option>
+                                <option value="2">2 Vessels</option>
+                                <option value="3">3 Vessels</option>
+                                <option value="4">4 Vessels</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Column Span for Thallium -->
+                    <div class="form-group full-width">
+                        <label for="thal" title="Results of Thallium Stress Test"><i class="fa-solid fa-circle-radiation"></i> Thallium Stress Test</label>
+                        <div class="select-wrapper">
+                            <select id="thal" name="thal" required>
+                                <option value="" disabled selected>Select result</option>
+                                <option value="1">Normal Blood Flow</option>
+                                <option value="2">Fixed Defect (Past Heart Issue)</option>
+                                <option value="3">Reversible Defect (Current Blood Flow Issue)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-predict" id="submitBtn">
+                        <span>Analyze Patient Data</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <div class="loading-spinner" id="spinner"></div>
+                    </button>
+                    <button type="button" class="btn-reset" onclick="fillDemoData()">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Demo Data
+                    </button>
+                </div>
+
+            </form>
+        </main>
+        </div>
+
+        {% include 'footer.html' %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    
+    <!-- tsParticles JS Framework for Live Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+        tsParticles.load("particles-js", {
+            background: {
+                color: { value: "transparent" }
+            },
+            fpsLimit: 60,
+            interactivity: {
+                events: {
+                    onClick: { enable: true, mode: "push" },
+                    onHover: { enable: true, mode: "grab" },
+                    resize: true
+                },
+                modes: {
+                    push: { quantity: 3 },
+                    grab: { distance: 180, links: { opacity: 0.8 } }
+                }
+            },
+            particles: {
+                color: { value: "#ff2a5f" },
+                links: {
+                    color: "#ff2a5f",
+                    distance: 150,
+                    enable: true,
+                    opacity: 0.3,
+                    width: 1.5
+                },
+                move: {
+                    direction: "none",
+                    enable: true,
+                    outModes: { default: "bounce" },
+                    random: false,
+                    speed: 1.2,
+                    straight: false
+                },
+                number: {
+                    density: { enable: true, area: 800 },
+                    value: 70
+                },
+                opacity: { value: 0.5 },
+                shape: { type: "circle" },
+                size: { value: { min: 1, max: 3 } }
+            },
+            detectRetina: true
+        });
+    </script>
+</body>
+
+</html>

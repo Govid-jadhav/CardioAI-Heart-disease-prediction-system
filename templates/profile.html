@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | CardioAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        
+        .profile-container {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            width: 100%;
+        }
+        
+        .profile-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            padding: 3rem;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 4rem;
+            color: white;
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+        }
+        
+        .profile-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-email {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .profile-details-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .detail-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        
+        .profile-actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="nav-logo" style="text-decoration:none;">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>CardioAI</span>
+        </a>
+        <div class="nav-menu" id="navMenu">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/features">Features</a></li>
+                <li><a href="/gallery">Gallery</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/help">Help</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+            <div class="nav-auth">
+                {% if session.get('user_id') %}
+                    <a href="/profile" style="color: var(--primary-color); font-weight: 500; text-decoration: none; transition: color 0.3s; display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fa-solid fa-user-circle" style="font-size: 1.2rem;"></i> Hi, {{ session.get('user_name').split()[0][:15] }}!
+                    </a>
+
+                {% else %}
+                    <a href="/login" class="btn-login">Login</a>
+                    <a href="/signup" class="btn-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+        <button class="menu-toggle" id="menuToggle" onclick="document.getElementById('navMenu').classList.toggle('active')">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Dynamic Background Shapes -->
+    <!-- Dynamic Background Elements (tsParticles Framework) -->
+    <div id="particles-js" style="position: fixed; z-index: -2; left: 0; top: 0; width: 100%; height: 100vh;"></div>
+
+    <div class="container profile-container">
+        <div class="profile-card">
+            
+            <div class="profile-avatar">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            
+            <h1 class="profile-name">{{ user.name }}</h1>
+            <div class="profile-email">
+                <i class="fa-solid fa-envelope"></i> {{ user.email }}
+            </div>
+            
+            <div class="profile-details-grid">
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fa-solid fa-address-card"></i> First Name</span>
+                    <span class="detail-value">{{ user.first_name if user.first_name else 'Not provided' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fa-solid fa-address-card"></i> Last Name</span>
+                    <span class="detail-value">{{ user.last_name if user.last_name else 'Not provided' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fa-solid fa-phone"></i> Phone Number</span>
+                    <span class="detail-value">{{ user.phone if user.phone else 'Not provided' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fa-solid fa-calendar-alt"></i> Date of Birth</span>
+                    <span class="detail-value">{{ user.birth_date if user.birth_date else 'Not provided' }}</span>
+                </div>
+                <div class="detail-item" style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1rem; margin-top: 0.5rem;">
+                    <span class="detail-label"><i class="fa-solid fa-shield-check"></i> Account Security</span>
+                    <span class="detail-value" style="color: #22c55e;">Verified & Encrypted</span>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <a href="/" class="btn-start" style="padding: 0.8rem 1.5rem; font-size: 1rem;">
+                    New Assessment <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <a href="/logout" class="btn-reset">
+                    Logout
+                </a>
+            </div>
+
+            {% if predictions and predictions|length > 0 %}
+            <div style="margin-top: 3rem; text-align: left;">
+                <h3 style="color: var(--text-main); margin-bottom: 1rem; font-size: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;"><i class="fa-solid fa-clock-rotate-left"></i> Assessment History</h3>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    {% for p in predictions %}
+                    <div style="background: rgba(0, 0, 0, 0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden;">
+                        
+                        <div id="pdfContentHistory_{{ loop.index }}" style="padding: 1.5rem; background: var(--bg-surface); border-radius: 8px;">
+                            <h2 style="display: none; color: white; margin-bottom: 20px; font-family: 'Outfit', sans-serif;">CardioAI Medical Record</h2>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <span style="color: var(--text-muted); font-size: 0.9rem;"><i class="fa-solid fa-calendar-day"></i> {{ p.timestamp.strftime('%B %d, %Y - %I:%M %p') }}</span>
+                                <span style="font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; {% if 'No' in p.result %}background: rgba(34, 197, 94, 0.2); color: #4ade80;{% else %}background: rgba(239, 68, 68, 0.2); color: #f87171;{% endif %}">{{ p.result }}</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.8rem; font-size: 0.85rem; color: #cbd5e1; margin-top: 0.8rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.8rem;">
+                                <div><strong style="color: #94a3b8;">Age:</strong> {{ p.age }}</div>
+                                <div><strong style="color: #94a3b8;">Sex:</strong> {{ 'Male' if p.sex == 1 else 'Female' }}</div>
+                                <div><strong style="color: #94a3b8;">BP:</strong> {{ p.bp }}</div>
+                                <div><strong style="color: #94a3b8;">Chol:</strong> {{ p.chol }}</div>
+                                <div><strong style="color: #94a3b8;">HR:</strong> {{ p.thalach }}</div>
+                            </div>
+                        </div>
+
+                        <!-- PDF Download Button -->
+                        <button onclick="downloadHistoryPDF('pdfContentHistory_{{ loop.index }}', 'CardioAI_Record_{{ loop.index }}')" style="width: 100%; border-radius: 0; background:rgba(255,42,95,0.1); border:none; border-top: 1px solid rgba(255,255,255,0.05); color:var(--primary-color); padding: 0.8rem; cursor:pointer; font-weight: 600; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,42,95,0.2)'" onmouseout="this.style.background='rgba(255,42,95,0.1)'">
+                            <i class="fa-solid fa-file-pdf"></i> Download PDF Record
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    
+    {% include 'footer.html' %}
+    <!-- tsParticles JS Framework for Live Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+        tsParticles.load("particles-js", {
+            background: { color: { value: "transparent" } },
+            fpsLimit: 60,
+            interactivity: {
+                events: { onClick: { enable: true, mode: "push" }, onHover: { enable: true, mode: "grab" }, resize: true },
+                modes: { push: { quantity: 3 }, grab: { distance: 180, links: { opacity: 0.8 } } }
+            },
+            particles: {
+                color: { value: "#ff2a5f" },
+                links: { color: "#ff2a5f", distance: 150, enable: true, opacity: 0.3, width: 1.5 },
+                move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: false, speed: 1.2, straight: false },
+                number: { density: { enable: true, area: 800 }, value: 70 },
+                opacity: { value: 0.5 },
+                shape: { type: "circle" },
+                size: { value: { min: 1, max: 3 } }
+            },
+            detectRetina: true
+        });
+    </script>
+    <!-- html2pdf Framework -->
+    <script>
+        function downloadHistoryPDF(elementId, filename) {
+            var content = document.getElementById(elementId).innerHTML;
+            
+            // Create an isolated printable window natively
+            var printWindow = window.open('', '', 'height=800,width=800');
+            printWindow.document.write('<!DOCTYPE html><html><head><title>CardioAI Medical Record</title>');
+            printWindow.document.write('<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">');
+            printWindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">');
+            printWindow.document.write('<style>');
+            printWindow.document.write('@page { margin: 0.5in; }');
+            printWindow.document.write('body { font-family: "Outfit", sans-serif; background: #ffffff; color: #1e293b; padding: 20px; line-height: 1.6; }');
+            printWindow.document.write('.container { max-width: 800px; margin: 0 auto; background: #f8fafc; padding: 40px; border-radius: 12px; border: 1px solid #e2e8f0; }');
+            printWindow.document.write('h2 { color: #ff2a5f; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-top: 0; text-align: center; }');
+            printWindow.document.write('strong { color: #475569; }');
+            // Force print styles for dark UI overrides
+            printWindow.document.write('.result-icon { text-align: center; font-size: 3rem; margin-bottom: 20px; }');
+            printWindow.document.write('.safe-text, .danger-text { font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 30px; display: block; }');
+            printWindow.document.write('</style></head><body>');
+            
+            printWindow.document.write('<div class="container">');
+            printWindow.document.write('<h2><i class="fa-solid fa-heart-pulse"></i> CardioAI Official Diagnostics</h2>');
+            // Remove the dark background overrides that were inline and set it to clean black/white
+            content = content.replace(/background:\s*var\(--bg-surface\)/g, '');
+            content = content.replace(/color:\s*white/g, 'color: #0f172a');
+            content = content.replace(/rgba\(0, 0, 0, 0.3\)/g, '#ffffff');
+            content = content.replace(/#cbd5e1/g, '#334155');
+            content = content.replace(/color:\s*var\(--text-main\)/g, 'color: #000000');
+            content = content.replace(/color:\s*var\(--text-muted\)/g, 'color: #64748b');
+            
+            printWindow.document.write(content);
+            printWindow.document.write('<div style="margin-top: 50px; border-top: 1px dashed #cbd5e1; padding-top: 20px; text-align: center; font-size: 0.85rem; color: #94a3b8;"><p>Generated by CardioAI Predictive System. This report is for informational purposes only.</p></div>');
+            printWindow.document.write('</div></body></html>');
+            printWindow.document.close();
+            
+            // Allow resources to reliably fetch before snapping the PDF UI
+            setTimeout(function() {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            }, 800);
+        }
+    </script>
+</body>
+</html>

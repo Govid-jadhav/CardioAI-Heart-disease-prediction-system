@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & Support | CardioAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-container { margin-top: 2rem; }
+        .hero-section { text-align: center; margin-bottom: 3rem; }
+        .hero-section h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .hero-section h1 span { color: var(--primary-color); }
+        
+        .vision-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+        .vision-card { text-align: left; padding: 2rem; background: var(--bg-surface); border-radius: 16px; border: 1px solid var(--border-color); backdrop-filter: blur(10px); transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; position: relative; overflow: hidden; }
+        .vision-card:hover { transform: translateY(-5px); border-color: rgba(255, 42, 95, 0.4); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
+        .vision-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary-color); border-radius: 4px 0 0 4px; }
+        .step-number { background: rgba(255, 42, 95, 0.1); color: var(--primary-color); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 1.2rem; margin-bottom: 1rem; border: 1px solid rgba(255, 42, 95, 0.2); }
+        
+        .guide-section { margin-top: 4rem; }
+        .section-title { color: var(--text-main); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-size: 1.8rem; }
+        .section-title i { color: var(--primary-color); font-size: 1.5rem; }
+        
+        .param-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; }
+        .param-card { background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start; transition: all 0.3s ease; }
+        .param-card:hover { background: rgba(15, 23, 42, 0.7); border-color: rgba(255, 255, 255, 0.2); transform: translateX(5px); }
+        .param-icon { width: 45px; height: 45px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-size: 1.2rem; flex-shrink: 0; }
+        .param-info h4 { color: var(--text-main); font-size: 1.05rem; margin-bottom: 0.3rem; display: flex; align-items: center; justify-content: space-between; }
+        .param-info p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 0; }
+        .category-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; background: rgba(255, 255, 255, 0.1); color: #ccc; font-weight: normal; }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+        <nav class="navbar">
+        <a href="/" class="nav-logo" style="text-decoration:none;">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>CardioAI</span>
+        </a>
+        <div class="nav-menu" id="navMenu">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/features">Features</a></li>
+                <li><a href="/gallery">Gallery</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/help">Help</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+                                    <div class="nav-auth">
+                {% if session.get('user_id') %}
+                    <a href="/profile" style="color: var(--primary-color); font-weight: 500; text-decoration: none; transition: color 0.3s; display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fa-solid fa-user-circle" style="font-size: 1.2rem;"></i> Hi, {{ session.get('user_name').split()[0][:15] }}!
+                    </a>
+
+                {% else %}
+                    <a href="/login" class="btn-login">Login</a>
+                    <a href="/signup" class="btn-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+        <button class="menu-toggle" id="menuToggle" onclick="document.getElementById('navMenu').classList.toggle('active')">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Dynamic Background Shapes -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="container page-container">
+        <main class="glass-panel" style="padding: 3rem;">
+            <div class="hero-section" style="margin-bottom: 3rem;">
+                <h1>How to Use <span>CardioAI</span></h1>
+                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Follow these simple steps to perform a highly accurate heart disease risk assessment and understand the clinical parameters.</p>
+            </div>
+            
+            <h2 class="section-title"><i class="fa-solid fa-stethoscope"></i> Quick Start Guide</h2>
+            <div class="vision-grid">
+                <div class="vision-card">
+                    <div class="step-number">1</div>
+                    <h3 style="font-size:1.2rem; margin-bottom:0.5rem; color: var(--text-main);">Account Setup</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Sign up or log in to safely save and track your assessment history in your personal dashboard.</p>
+                </div>
+                <div class="vision-card">
+                    <div class="step-number">2</div>
+                    <h3 style="font-size:1.2rem; margin-bottom:0.5rem; color: var(--text-main);">Gather Vitals</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Ensure you have the patient's latest clinical data, including Resting BP, Cholesterol, and FBS.</p>
+                </div>
+                <div class="vision-card">
+                    <div class="step-number">3</div>
+                    <h3 style="font-size:1.2rem; margin-bottom:0.5rem; color: var(--text-main);">Data Entry</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Navigate to the Home page and enter parameters. Use "Demo Data" to safely test the form.</p>
+                </div>
+                <div class="vision-card">
+                    <div class="step-number">4</div>
+                    <h3 style="font-size:1.2rem; margin-bottom:0.5rem; color: var(--text-main);">AI Analysis</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Click "Analyze Patient Data". The ML model will instantly process inputs and return a prediction.</p>
+                </div>
+            </div>
+
+            <div class="guide-section">
+                <h2 class="section-title"><i class="fa-solid fa-book-medical"></i> Parameter Reference Guide</h2>
+                <div class="param-grid">
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-heart-crack"></i></div>
+                        <div class="param-info">
+                            <h4>Chest Pain Type (CP) <span class="category-badge">Clinical</span></h4>
+                            <p>0: Typical Angina, 1: Atypical Angina, 2: Non-anginal, 3: Asymptomatic.</p>
+                        </div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-droplet"></i></div>
+                        <div class="param-info">
+                            <h4>Resting BP <span class="category-badge">Vitals</span></h4>
+                            <p>Resting blood pressure in mm Hg upon admission to the hospital.</p>
+                        </div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-burger"></i></div>
+                        <div class="param-info">
+                            <h4>Cholesterol <span class="category-badge">Lab</span></h4>
+                            <p>Serum cholesterol measured in mg/dl.</p>
+                        </div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
+                        <div class="param-info">
+                            <h4>Fasting Blood Sugar (FBS) <span class="category-badge">Lab</span></h4>
+                            <p>1 if fasting sugar > 120 mg/dl; otherwise 0.</p>
+                        </div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-wave-square"></i></div>
+                        <div class="param-info">
+                            <h4>RestECG <span class="category-badge">Test</span></h4>
+                            <p>0: Normal, 1: ST-T wave abnormality, 2: Left ventricular hypertrophy.</p>
+                        </div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                        <div class="param-info">
+                            <h4>Max Heart Rate (Thalach) <span class="category-badge">Vitals</span></h4>
+                            <p>Maximum heart rate achieved during the stress test or exercise.</p>
+                        </div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-person-running"></i></div>
+                        <div class="param-info">
+                            <h4>Exercise Angina (Exang) <span class="category-badge">Clinical</span></h4>
+                            <p>Exercise-induced angina (1 = Yes; 0 = No).</p>
+                        </div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="param-info">
+                            <h4>Oldpeak <span class="category-badge">Test</span></h4>
+                            <p>ST depression induced by exercise relative to rest.</p>
+                        </div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
+                        <div class="param-info">
+                            <h4>Slope <span class="category-badge">Test</span></h4>
+                            <p>Slope of peak exercise ST segment (0: Upsloping, 1: Flat, 2: Downsloping).</p>
+                        </div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-microscope"></i></div>
+                        <div class="param-info">
+                            <h4>Fluoroscopy (CA) <span class="category-badge">Test</span></h4>
+                            <p>Number of major vessels (0-3) colored by fluoroscopy.</p>
+                        </div>
+                    </div>
+                    <div class="param-card">
+                        <div class="param-icon"><i class="fa-solid fa-vial"></i></div>
+                        <div class="param-info">
+                            <h4>Thallium Test (Thal) <span class="category-badge">Lab</span></h4>
+                            <p>Thallium stress test result (1: Normal, 2: Fixed defect, 3: Reversible defect).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Parameter Detail Modal -->
+        <div id="paramModal" style="position:fixed; top:0; left:0; width:100%; height:100vh; background:rgba(0,0,0,0.85); z-index:9998; display:none; justify-content:center; align-items:center; backdrop-filter:blur(8px); opacity:0; transition: opacity 0.3s ease;">
+            <div class="glass-panel" style="max-width: 500px; width: 90%; background: var(--bg-surface); border: 1px solid var(--border-color); padding: 2.5rem; border-radius: 20px; position: relative; transform: translateY(20px); transition: transform 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+                <button onclick="closeModal()" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: color 0.3s;" onmouseover="this.style.color='var(--primary-color)'" onmouseout="this.style.color='var(--text-muted)'"><i class="fa-solid fa-xmark"></i></button>
+                <div id="modalIcon" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem; text-align:center;"></div>
+                <h3 id="modalTitle" style="color: var(--text-main); font-size: 1.6rem; text-align: center; margin-bottom: 1rem;"></h3>
+                <p id="modalDescription" style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; text-align: center; margin-bottom: 1.5rem;"></p>
+                <div style="text-align: center;">
+                    <button onclick="closeModal()" style="background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%); color:white; border:none; padding:0.8rem 2rem; border-radius:30px; font-weight:600; cursor:pointer; font-size: 1rem; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Got it</button>
+                </div>
+            </div>
+        </div>
+        
+        {% include 'footer.html' %}
+    </div>
+    <!-- tsParticles JS Framework for Live Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+        tsParticles.load("particles-js", {
+            background: { color: { value: "transparent" } },
+            fpsLimit: 60,
+            interactivity: {
+                events: { onClick: { enable: true, mode: "push" }, onHover: { enable: true, mode: "grab" }, resize: true },
+                modes: { push: { quantity: 3 }, grab: { distance: 180, links: { opacity: 0.8 } } }
+            },
+            particles: {
+                color: { value: "#ff2a5f" },
+                links: { color: "#ff2a5f", distance: 150, enable: true, opacity: 0.3, width: 1.5 },
+                move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: false, speed: 1.2, straight: false },
+                number: { density: { enable: true, area: 800 }, value: 70 },
+                opacity: { value: 0.5 },
+                shape: { type: "circle" },
+                size: { value: { min: 1, max: 3 } }
+            },
+            detectRetina: true
+        });
+    </script>
+    <script>
+        const paramDescriptions = {
+            "Chest Pain Type (CP)": "This measures the type of chest pain you experience. 'Typical Angina' means pain directly caused by the heart not getting enough blood. 'Atypical Angina' is chest pain not directly related to classic heart disease. 'Non-anginal' is pain caused by something else (like muscles). 'Asymptomatic' means no pain at all.",
+            "Resting BP": "This is your blood pressure while you are completely at rest. A normal resting blood pressure is usually around 120/80 mmHg. High blood pressure puts extra strain on your heart and arteries.",
+            "Cholesterol": "This measures the total amount of cholesterol in your blood. High cholesterol can lead to plaque buildup in your arteries, increasing the risk of a heart attack or stroke.",
+            "Fasting Blood Sugar (FBS)": "This indicates if your blood sugar is elevated after fasting (not eating for a while). A level above 120 mg/dl may indicate diabetes or pre-diabetes, which is a significant risk factor for heart disease.",
+            "RestECG": "This records the electrical activity of your heart while at rest. 'ST-T wave abnormality' or 'Left ventricular hypertrophy' (thickening of the heart muscle) can indicate underlying heart issues.",
+            "Max Heart Rate (Thalach)": "This is the highest heart rate you achieved during a stress test. A lower-than-expected maximum heart rate can sometimes indicate heart problems.",
+            "Exercise Angina (Exang)": "This indicates whether you experienced chest pain specifically while exercising. Pain during physical activity is a strong indicator that the heart may not be getting enough oxygen.",
+            "Oldpeak": "This looks at a specific pattern on your ECG ('ST segment') after exercise compared to when you are resting. A significant 'depression' or drop in this segment indicates the heart muscle isn't getting enough blood during stress.",
+            "Slope": "This describes the shape of your ECG curve during peak exercise. An 'Upsloping' curve is generally a healthy response, while a 'Flat' or 'Downsloping' curve can be a sign of poor heart health.",
+            "Fluoroscopy (CA)": "This test uses an X-ray to look at the main blood vessels feeding your heart. The number (0 to 3) represents how many of these major vessels are narrowed or blocked by plaque.",
+            "Thallium Test (Thal)": "This is a radioactive dye test to see how well blood flows to your heart. 'Normal' means good blood flow. 'Fixed defect' means an old injury (like a past heart attack). 'Reversible defect' means a current issue where blood flow is temporarily blocked."
+        };
+
+        function openModal(title, iconClass) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalIcon').innerHTML = `<i class="${iconClass}"></i>`;
+            document.getElementById('modalDescription').innerText = paramDescriptions[title] || "Detailed description not available.";
+            
+            const modal = document.getElementById('paramModal');
+            modal.style.display = 'flex';
+            // Small delay for CSS transition
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                modal.children[0].style.transform = 'translateY(0)';
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('paramModal');
+            modal.style.opacity = '0';
+            modal.children[0].style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        // Add click listeners to cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.param-card');
+            cards.forEach(card => {
+                card.style.cursor = 'pointer'; // Make it look clickable
+                // Add a hover hint dynamically
+                card.title = "Click to learn more";
+                
+                card.addEventListener('click', () => {
+                    const titleText = card.querySelector('h4').childNodes[0].nodeValue.trim();
+                    const iconClass = card.querySelector('.param-icon i').className;
+                    openModal(titleText, iconClass);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

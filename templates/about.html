@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | CardioAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-container { margin-top: 2rem; }
+        .hero-section { text-align: center; margin-bottom: 3rem; }
+        .hero-section h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .hero-section h1 span { color: var(--primary-color); }
+        .vision-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .vision-card { text-align: center; padding: 2rem; background: rgba(15, 23, 42, 0.4); border-radius: 16px; border: 1px solid var(--border-color); }
+        .vision-card i { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+        <nav class="navbar">
+        <a href="/" class="nav-logo" style="text-decoration:none;">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>CardioAI</span>
+        </a>
+        <div class="nav-menu" id="navMenu">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/features">Features</a></li>
+                <li><a href="/gallery">Gallery</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/help">Help</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+                                    <div class="nav-auth">
+                {% if session.get('user_id') %}
+                    <a href="/profile" style="color: var(--primary-color); font-weight: 500; text-decoration: none; transition: color 0.3s; display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fa-solid fa-user-circle" style="font-size: 1.2rem;"></i> Hi, {{ session.get('user_name').split()[0][:15] }}!
+                    </a>
+
+                {% else %}
+                    <a href="/login" class="btn-login">Login</a>
+                    <a href="/signup" class="btn-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+        <button class="menu-toggle" id="menuToggle" onclick="document.getElementById('navMenu').classList.toggle('active')">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Dynamic Background Shapes -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="container page-container">
+        <main class="glass-panel">
+            <div class="hero-section">
+                <h1>About <span>CardioAI</span></h1>
+                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Pioneering the future of diagnostic medicine through accessible, highly-accurate machine learning predictions.</p>
+            </div>
+            
+            <div class="vision-grid">
+                <div class="vision-card">
+                    <i class="fa-solid fa-brain"></i>
+                    <h3>Advanced Algorithms</h3>
+                    <p style="color: var(--text-muted); margin-top: 10px;">Our backend is powered by state-of-the-art predictive models analyzed from thousands of clinical registries.</p>
+                </div>
+                <div class="vision-card">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>Privacy First</h3>
+                    <p style="color: var(--text-muted); margin-top: 10px;">Patient data remains completely anonymous and perfectly secured under strict compliance guidelines.</p>
+                </div>
+                <div class="vision-card">
+                    <i class="fa-solid fa-bolt"></i>
+                    <h3>Lightning Fast</h3>
+                    <p style="color: var(--text-muted); margin-top: 10px;">Instant analytical feedback designed to give healthcare professionals the immediate data they need.</p>
+                </div>
+            </div>
+        </main>
+        
+        {% include 'footer.html' %}
+    </div>
+    <!-- tsParticles JS Framework for Live Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+        tsParticles.load("particles-js", {
+            background: { color: { value: "transparent" } },
+            fpsLimit: 60,
+            interactivity: {
+                events: { onClick: { enable: true, mode: "push" }, onHover: { enable: true, mode: "grab" }, resize: true },
+                modes: { push: { quantity: 3 }, grab: { distance: 180, links: { opacity: 0.8 } } }
+            },
+            particles: {
+                color: { value: "#ff2a5f" },
+                links: { color: "#ff2a5f", distance: 150, enable: true, opacity: 0.3, width: 1.5 },
+                move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: false, speed: 1.2, straight: false },
+                number: { density: { enable: true, area: 800 }, value: 70 },
+                opacity: { value: 0.5 },
+                shape: { type: "circle" },
+                size: { value: { min: 1, max: 3 } }
+            },
+            detectRetina: true
+        });
+    </script>
+</body>
+</html>

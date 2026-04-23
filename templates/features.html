@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features | CardioAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-container { margin-top: 2rem; }
+        .hero-section { text-align: center; margin-bottom: 4rem; animation: slideUp 0.8s ease-out; }
+        .hero-section h1 { font-size: 3.5rem; margin-bottom: 1rem; font-weight: 700; letter-spacing: -1px; }
+        .hero-section h1 span { color: var(--primary-color); text-shadow: 0 0 20px rgba(255, 42, 95, 0.3); }
+        .hero-section p { font-size: 1.15rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+        
+        .vision-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
+        .feature-card { 
+            background: var(--bg-surface); 
+            backdrop-filter: blur(10px);
+            padding: 2.5rem 2rem; 
+            border-radius: 20px; 
+            border: 1px solid var(--border-color); 
+            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .feature-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); 
+            border-color: rgba(255, 42, 95, 0.3);
+        }
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        .feature-icon { 
+            width: 60px; height: 60px; 
+            background: rgba(255, 42, 95, 0.1); 
+            border-radius: 16px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.8rem; 
+            color: var(--primary-color); 
+            margin-bottom: 1.5rem; 
+            transition: transform 0.4s ease, background 0.4s ease;
+        }
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 10px 20px rgba(255, 42, 95, 0.3);
+        }
+        .feature-card h3 { 
+            font-size: 1.4rem; 
+            color: var(--text-main); 
+            margin-bottom: 1rem; 
+            font-weight: 600;
+        }
+        .feature-card p { 
+            color: var(--text-muted); 
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        .output-example-section {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+        .output-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        .output-card:hover {
+            transform: translateX(10px);
+        }
+        .output-card.safe {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%);
+            border-left: 4px solid var(--safe);
+        }
+        .output-card.danger {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, transparent 100%);
+            border-left: 4px solid var(--danger);
+        }
+        .output-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .output-card.safe .output-icon { color: var(--safe); }
+        .output-card.danger .output-icon { color: var(--danger); }
+        .output-content h4 { color: var(--text-main); font-size: 1.2rem; margin-bottom: 0.25rem; font-weight: 600; }
+        .output-content p { color: var(--text-muted); font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+        <nav class="navbar">
+        <a href="/" class="nav-logo" style="text-decoration:none;">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>CardioAI</span>
+        </a>
+        <div class="nav-menu" id="navMenu">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/features" class="active">Features</a></li>
+                <li><a href="/gallery">Gallery</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/help">Help</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+                                    <div class="nav-auth">
+                {% if session.get('user_id') %}
+                    <a href="/profile" style="color: var(--primary-color); font-weight: 500; text-decoration: none; transition: color 0.3s; display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fa-solid fa-user-circle" style="font-size: 1.2rem;"></i> Hi, {{ session.get('user_name').split()[0][:15] }}!
+                    </a>
+
+                {% else %}
+                    <a href="/login" class="btn-login">Login</a>
+                    <a href="/signup" class="btn-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+        <button class="menu-toggle" id="menuToggle" onclick="document.getElementById('navMenu').classList.toggle('active')">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Dynamic Background Shapes -->
+    <div id="particles-js" style="position: fixed; z-index: -2; left: 0; top: 0; width: 100%; height: 100vh;"></div>
+
+    <div class="container page-container">
+        <main class="glass-panel" style="padding: 4rem 2rem;">
+            <div class="hero-section">
+                <div class="hero-badge" style="display:inline-flex; align-items:center; gap:0.5rem; background:rgba(255,42,95,0.1); color:var(--primary-color); padding:0.6rem 1.2rem; border-radius:20px; font-weight:600; font-size:0.95rem; border:1px solid rgba(255,42,95,0.2); margin-bottom:1.5rem;">
+                    <i class="fa-solid fa-star"></i> Powerful Capabilities
+                </div>
+                <h1>Discover the <span>Features</span></h1>
+                <p>Explore the powerful tools and functionalities built into CardioAI to provide accurate, reliable, and secure cardiovascular diagnostics.</p>
+            </div>
+            
+            <div class="vision-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-file-medical"></i></div>
+                    <h3>Comprehensive Data Input</h3>
+                    <p>Process 13 critical clinical parameters including age, blood pressure, cholesterol levels, resting ECG, and thallium stress test results for a complete diagnostic profile.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-brain"></i></div>
+                    <h3>Advanced Machine Learning</h3>
+                    <p>Leverages predictive algorithms including K-Nearest Neighbors (KNN) and Naive Bayes to cross-validate results and ensure maximum diagnostic accuracy.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
+                    <h3>Instant Diagnostics</h3>
+                    <p>Get real-time risk assessment immediately after submitting patient data. Eliminate waiting times and empower faster clinical decision-making.</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h3>Model Comparison</h3>
+                    <p>Compare the predictive accuracy across different machine learning models directly within the interface to build trust in the diagnostic output.</p>
+                </div>
+                <!-- Feature 5 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-server"></i></div>
+                    <h3>Secure Data Storage</h3>
+                    <p>Patient records and assessment histories are securely encrypted and stored using robust MongoDB architecture, ensuring full privacy and compliance.</p>
+                </div>
+                <!-- Feature 6 -->
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-desktop"></i></div>
+                    <h3>Intuitive Interface</h3>
+                    <p>A beautifully designed, responsive user interface that looks great on any device. Features dark mode aesthetics and fluid micro-animations for a premium experience.</p>
+                </div>
+            </div>
+
+            <!-- Output Example -->
+            <div class="output-example-section">
+                <div style="text-align:center; margin-bottom:3rem;">
+                    <h2 style="font-size:2rem; font-weight:700; color:var(--text-main);">Clear & Actionable <span style="color:var(--primary-color);">Results</span></h2>
+                    <p style="color:var(--text-muted); margin-top:0.5rem; font-size:1.1rem;">Understand the diagnostic output at a single glance.</p>
+                </div>
+                
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div class="output-card safe">
+                        <div class="output-icon"><i class="fa-solid fa-shield-heart"></i></div>
+                        <div class="output-content">
+                            <h4>Low Risk Detected</h4>
+                            <p>No immediate signs of cardiovascular disease. Maintain a healthy lifestyle.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="output-card danger">
+                        <div class="output-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="output-content">
+                            <h4>High Risk Detected</h4>
+                            <p>Significant indicators of heart disease. Immediate medical consultation advised.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        {% include 'footer.html' %}
+    </div>
+
+    <!-- tsParticles JS Framework for Live Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+        tsParticles.load("particles-js", {
+            background: { color: { value: "transparent" } },
+            fpsLimit: 60,
+            interactivity: {
+                events: { onClick: { enable: true, mode: "push" }, onHover: { enable: true, mode: "grab" }, resize: true },
+                modes: { push: { quantity: 3 }, grab: { distance: 180, links: { opacity: 0.8 } } }
+            },
+            particles: {
+                color: { value: "#ff2a5f" },
+                links: { color: "#ff2a5f", distance: 150, enable: true, opacity: 0.3, width: 1.5 },
+                move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: false, speed: 1.2, straight: false },
+                number: { density: { enable: true, area: 800 }, value: 70 },
+                opacity: { value: 0.5 },
+                shape: { type: "circle" },
+                size: { value: { min: 1, max: 3 } }
+            },
+            detectRetina: true
+        });
+    </script>
+</body>
+</html>

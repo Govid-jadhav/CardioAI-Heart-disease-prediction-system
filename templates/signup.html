@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | CardioAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-container {
+            max-width: 600px;
+            margin: 4rem auto;
+            width: 100%;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .auth-header i { font-size: 3rem; color: #008cff; margin-bottom: 1rem; }
+        .input-base {
+            padding: 1rem; 
+            border-radius: 6px; 
+            background: rgba(255,255,255,0.05); 
+            color: var(--text-main); 
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 100%;
+            font-family: inherit;
+        }
+        .input-base:focus {
+            outline: none;
+            border-color: #008cff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="nav-logo" style="text-decoration:none;">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>CardioAI</span>
+        </a>
+        <div class="nav-menu" id="navMenu">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/features">Features</a></li>
+                <li><a href="/gallery">Gallery</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/help">Help</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+            <div class="nav-auth">
+                {% if session.get('user_id') %}
+                    <a href="/profile" style="color: var(--primary-color); font-weight: 500; text-decoration: none; transition: color 0.3s; display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fa-solid fa-user-circle" style="font-size: 1.2rem;"></i> Hi, {{ session.get('user_name').split()[0][:15] }}!
+                    </a>
+
+                {% else %}
+                    <a href="/login" class="btn-login">Login</a>
+                    <a href="/signup" class="btn-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+        <button class="menu-toggle" id="menuToggle" onclick="document.getElementById('navMenu').classList.toggle('active')">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Dynamic Background Elements (tsParticles Framework) -->
+    <div id="particles-js" style="position: fixed; z-index: -2; left: 0; top: 0; width: 100%; height: 100vh;"></div>
+
+    <div class="container auth-container">
+        <main class="glass-panel glass-panel-solid">
+            <div class="auth-header">
+                <i class="fa-solid fa-user-plus"></i>
+                <h2>Create an Account</h2>
+                <p style="color: var(--text-muted); margin-top: 5px;">Join CardioAI to save your predictions</p>
+            </div>
+            
+            {% if error %}
+            <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger); padding: 0.75rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; color: #fca5a5;">
+                <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            <form action="/signup" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="display: flex; gap: 1rem;">
+                    <input type="text" name="first_name" class="input-base" placeholder="First name" required>
+                    <input type="text" name="last_name" class="input-base" placeholder="Last name" required>
+                </div>
+                
+                <input type="email" name="email" class="input-base" placeholder="Email Address" required>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <input type="text" name="birth_date" class="input-base" placeholder="Birth date" required onfocus="(this.type='date')" onblur="(this.value==''?this.type='text':this.type='date')">
+                    <input type="tel" name="phone" class="input-base" placeholder="Phone number" required>
+                </div>
+                
+                <div style="position: relative;">
+                    <input type="password" id="signup_password" name="password" class="input-base" placeholder="Password" required>
+                    <i class="fa-solid fa-eye-slash" style="position: absolute; right: 1rem; top: 1.2rem; cursor: pointer; color: var(--text-muted);" onclick="togglePassword('signup_password', this)"></i>
+                </div>
+
+                <div style="position: relative;">
+                    <input type="password" id="confirm_password" name="confirm_password" class="input-base" placeholder="Confirm password" required>
+                    <i class="fa-solid fa-eye-slash" style="position: absolute; right: 1rem; top: 1.2rem; cursor: pointer; color: var(--text-muted);" onclick="togglePassword('confirm_password', this)"></i>
+                </div>
+                
+                <button type="submit" style="width: 100%; background: #008cff; color: white; padding: 1rem; border-radius: 6px; font-weight: 600; font-size: 1.1rem; border: none; margin-top: 0.5rem; cursor: pointer;">
+                    Sign Up
+                </button>
+            </form>
+
+            <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">
+                Already have an account? <a href="/login" style="color: #008cff; text-decoration: none; font-weight: 600;">Log In</a>
+            </p>
+
+            <div style="display: flex; align-items: center; margin: 1.5rem 0;">
+                <div style="flex-grow: 1; height: 1px; background: rgba(255,255,255,0.2);"></div>
+                <span style="padding: 0 1rem; color: var(--text-muted); font-size: 0.9rem;">or</span>
+                <div style="flex-grow: 1; height: 1px; background: rgba(255,255,255,0.2);"></div>
+            </div>
+
+            <button type="button" style="width: 100%; background: transparent; color: var(--text-main); padding: 1rem; border-radius: 6px; font-weight: 600; font-size: 1rem; border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; gap: 0.5rem; cursor: pointer;">
+                <i class="fa-brands fa-google" style="color: #ea4335;"></i> Sign up with Google
+            </button>
+        </main>
+    </div>
+
+    <script>
+        function togglePassword(id, icon) {
+            var x = document.getElementById(id);
+            if (x.type === "password") {
+                x.type = "text";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            } else {
+                x.type = "password";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            }
+        }
+    </script>
+    {% include 'footer.html' %}
+    <!-- tsParticles JS Framework for Live Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+        tsParticles.load("particles-js", {
+            background: { color: { value: "transparent" } },
+            fpsLimit: 60,
+            interactivity: {
+                events: { onClick: { enable: true, mode: "push" }, onHover: { enable: true, mode: "grab" }, resize: true },
+                modes: { push: { quantity: 3 }, grab: { distance: 180, links: { opacity: 0.8 } } }
+            },
+            particles: {
+                color: { value: "#ff2a5f" },
+                links: { color: "#ff2a5f", distance: 150, enable: true, opacity: 0.3, width: 1.5 },
+                move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: false, speed: 1.2, straight: false },
+                number: { density: { enable: true, area: 800 }, value: 70 },
+                opacity: { value: 0.5 },
+                shape: { type: "circle" },
+                size: { value: { min: 1, max: 3 } }
+            },
+            detectRetina: true
+        });
+    </script>
+</body>
+</html>

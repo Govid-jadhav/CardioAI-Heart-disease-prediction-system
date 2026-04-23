@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | CardioAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-container {
+            margin-top: 2rem;
+            max-width: 1000px;
+        }
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideUp 0.8s ease-out;
+        }
+        .hero-section h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        .hero-section h1 span {
+            color: var(--primary-color);
+            text-shadow: 0 0 20px rgba(255, 42, 95, 0.3);
+        }
+        .hero-section p {
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        .contact-info-panel {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.3) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .contact-item:hover {
+            transform: translateX(10px);
+        }
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            background: rgba(255, 42, 95, 0.1);
+            color: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .contact-item:hover .contact-icon {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 10px 20px rgba(255, 42, 95, 0.3);
+            transform: rotate(5deg);
+        }
+        .contact-details h3 {
+            color: var(--text-main);
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        .contact-details p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .contact-form-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="nav-logo" style="text-decoration:none;">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>CardioAI</span>
+        </a>
+        <div class="nav-menu" id="navMenu">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/features">Features</a></li>
+                <li><a href="/gallery">Gallery</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/help">Help</a></li>
+                <li><a href="/contact" class="active">Contact</a></li>
+            </ul>
+            <div class="nav-auth">
+                {% if session.get('user_id') %}
+                <a href="/profile"
+                    style="color: var(--primary-color); font-weight: 500; text-decoration: none; transition: color 0.3s; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fa-solid fa-user-circle" style="font-size: 1.2rem;"></i> Hi, {{
+                    session.get('user_name').split()[0][:15] }}!
+                </a>
+
+                {% else %}
+                <a href="/login" class="btn-login">Login</a>
+                <a href="/signup" class="btn-signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+        <button class="menu-toggle" id="menuToggle"
+            onclick="document.getElementById('navMenu').classList.toggle('active')">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Dynamic Background Shapes -->
+    <div id="particles-js" style="position: fixed; z-index: -2; left: 0; top: 0; width: 100%; height: 100vh;"></div>
+
+    <div class="container page-container">
+        <main class="glass-panel" style="padding: 4rem 2rem; background: transparent; border: none; box-shadow: none;">
+            <div class="hero-section">
+                <div class="hero-badge" style="display:inline-flex; align-items:center; gap:0.5rem; background:rgba(255,42,95,0.1); color:var(--primary-color); padding:0.6rem 1.2rem; border-radius:20px; font-weight:600; font-size:0.95rem; border:1px solid rgba(255,42,95,0.2); margin-bottom:1.5rem;">
+                    <i class="fa-solid fa-headset"></i> Support
+                </div>
+                <h1>Get in <span>Touch</span></h1>
+                <p>Have a question about CardioAI? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+            </div>
+
+            <div class="contact-layout">
+                <div class="contact-info-panel">
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="contact-details">
+                            <h3>Our Location</h3>
+                            <p>Napur maharastra IND</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+                        <div class="contact-details">
+                            <h3>Email Us</h3>
+                            <p>support@cardioai.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+                        <div class="contact-details">
+                            <h3>Call Us</h3>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="font-size:1.1rem; margin-bottom:1rem; color:var(--text-main);">Follow Us</h3>
+                        <div style="display:flex; gap:1rem;">
+                            <a href="#" style="width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; color:var(--text-main); text-decoration:none; transition:all 0.3s ease;" onmouseover="this.style.background='var(--primary-color)'; this.style.transform='translateY(-3px)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.transform='translateY(0)'"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="#" style="width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; color:var(--text-main); text-decoration:none; transition:all 0.3s ease;" onmouseover="this.style.background='var(--primary-color)'; this.style.transform='translateY(-3px)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.transform='translateY(0)'"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="#" style="width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; color:var(--text-main); text-decoration:none; transition:all 0.3s ease;" onmouseover="this.style.background='var(--primary-color)'; this.style.transform='translateY(-3px)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.transform='translateY(0)'"><i class="fa-brands fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-panel">
+                    <form action="/contact" method="GET" class="auth-form">
+                        <div style="display:flex; gap:1.5rem; margin-bottom:1.5rem; flex-wrap: wrap;">
+                            <div class="form-group" style="flex:1; min-width: 200px; margin-bottom:0;">
+                                <label for="name">Your Name</label>
+                                <input type="text" id="name" name="name" placeholder="John Doe" required>
+                            </div>
+                            <div class="form-group" style="flex:1; min-width: 200px; margin-bottom:0;">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 2rem;">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" placeholder="How can we help you?"
+                                style="background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); color: var(--text-main); padding: 0.875rem 1rem; border-radius: 12px; font-family: inherit; font-size: 1rem; outline: none; width: 100%; resize: vertical; transition: all 0.3s ease;"
+                                onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px rgba(255, 42, 95, 0.1)'; this.style.background='rgba(15, 23, 42, 0.8)'"
+                                onblur="this.style.borderColor='var(--border-color)'; this.style.boxShadow='none'; this.style.background='rgba(15, 23, 42, 0.5)'"
+                                required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-predict" style="width: 100%;">
+                            <span>Send Message</span>
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        {% include 'footer.html' %}
+    </div>
+    <!-- tsParticles JS Framework for Live Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+        tsParticles.load("particles-js", {
+            background: { color: { value: "transparent" } },
+            fpsLimit: 60,
+            interactivity: {
+                events: { onClick: { enable: true, mode: "push" }, onHover: { enable: true, mode: "grab" }, resize: true },
+                modes: { push: { quantity: 3 }, grab: { distance: 180, links: { opacity: 0.8 } } }
+            },
+            particles: {
+                color: { value: "#ff2a5f" },
+                links: { color: "#ff2a5f", distance: 150, enable: true, opacity: 0.3, width: 1.5 },
+                move: { direction: "none", enable: true, outModes: { default: "bounce" }, random: false, speed: 1.2, straight: false },
+                number: { density: { enable: true, area: 800 }, value: 70 },
+                opacity: { value: 0.5 },
+                shape: { type: "circle" },
+                size: { value: { min: 1, max: 3 } }
+            },
+            detectRetina: true
+        });
+    </script>
+</body>
+</html>
