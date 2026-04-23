@@ -15,7 +15,8 @@ app = Flask(__name__)
 app.secret_key = "cardio_ai_secret_key" # Needed for sessions
 
 # Initialize MongoDB database
-client = MongoClient("mongodb://localhost:27017/")
+mongo_uri = os.environ.get("MONGO_URI", "mongodb://localhost:27017/")
+client = MongoClient(mongo_uri)
 db = client['heart_disease_db']
 users_collection = db['users']
 predictions_collection = db['predictions']
